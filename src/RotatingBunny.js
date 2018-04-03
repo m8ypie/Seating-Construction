@@ -31,17 +31,6 @@ class RotatingBunny extends Component {
   }
 
   animate = delta => {
-    // just for fun, let's rotate mr rabbit a little
-    // delta is 1 if running at 100% performance
-    // creates frame-independent tranformation
-    // let x = this.state.x
-    // let y = this.state.y
-    // if(this.state.grabbed){
-    //   var newPosition = this.state.data.global;
-    //   x = newPosition.x;
-    //   y = newPosition.y;
-    // }
-
     this.setState(state => ({
       ...state,
       rotation: state.rotation + 0.1 * delta
@@ -64,19 +53,19 @@ class RotatingBunny extends Component {
 
   render() {
     return <Bunny 
-    {...this.props} 
-    x={this.state.x}
-    y={this.state.y}
-    rotation={this.state.rotation} 
-    interactive={true}
-    mousedown={this.handlePress}
-    touchstart={this.handlePress}
-    mouseup={this.handleRelease}
-    mouseupoutside={this.handleRelease}
-    touchend={this.handleRelease}
-    touchendoutside={this.handleRelease}
-    mousemove={this.handleMove}
-    touchmove={this.handleMove}
+      {...this.props} 
+      x={this.state.x}
+      y={this.state.y}
+      rotation={this.state.rotation} 
+      interactive={true}
+      mousedown={this.handlePress}
+      touchstart={this.handlePress}
+      mouseup={this.handleRelease}
+      mouseupoutside={this.handleRelease}
+      touchend={this.handleRelease}
+      touchendoutside={this.handleRelease}
+      mousemove={this.handleMove}
+      touchmove={this.handleMove}
     />;
   }
 }
