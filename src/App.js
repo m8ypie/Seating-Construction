@@ -1,19 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { Stage } from "react-pixi-fiber";
+import RotatingBunny from "./RotatingBunny";
+
+const height = 450;
+const width = 600;
+const OPTIONS = {
+  backgroundColor: 0x1099bb,
+};
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Stage
+        options={OPTIONS}
+        height={height} 
+        width={width} 
+      >
+        <RotatingBunny 
+          x={width / 2} 
+          y={height / 2} 
+        />
+      </Stage>
     );
   }
 }
