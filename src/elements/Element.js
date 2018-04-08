@@ -56,6 +56,7 @@ export default class Element extends Component {
         touchendoutside:this.handleRelease,
         mousemove:this.handleMove,
         touchmove:this.handleMove,
+        grabbed:this.state.grabbed,
         radius: 30
     } 
     return this.determineElement(elementProps)
