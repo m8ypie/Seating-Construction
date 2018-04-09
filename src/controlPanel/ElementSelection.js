@@ -51,7 +51,7 @@ export default class Element extends Component {
             onClick={({key}) => onElementSelection(key)}
             selectedKeys={[]}
             onOpenChange={this.onOpenChange}
-            style={{ width: 256, height:height}}
+            style={{ width: 200, height:height}}
         >
             {items}
         </Menu>

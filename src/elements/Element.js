@@ -24,6 +24,7 @@ export default class Element extends Component {
 
   handlePress(event){
     //console.log(event.data)
+    this.props.onSelect()
     this.setState({ grabbed:true })
   }
   handleRelease(){

@@ -4,7 +4,7 @@ import Map from "./Map"
 import '../node_modules/antd/dist/antd.css'
 
 const height = 940;
-const width = 1300;
+const width = 1262;
 const options = {
   backgroundColor: 0xdfdfdf,
 };
