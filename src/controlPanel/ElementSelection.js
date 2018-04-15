@@ -22,7 +22,7 @@ export default class ElementSelection extends Component {
             return <SubMenu key={element.value} title={element.label}>
                     {
                         element.data.map(subElement => {
-                            return <Menu.Item key={subElement.value}>{subElement.label}</Menu.Item>
+                            return <Menu.Item label={subElement.label} key={subElement.value}>{subElement.label}</Menu.Item>
                         })
                     }
                 </SubMenu>
@@ -47,7 +47,7 @@ export default class ElementSelection extends Component {
             mode="inline"
             theme={'dark'}
             openKeys={this.state.openKeys}
-            onClick={({key}) => onElementSelection(key)}
+            onClick={(object) => onElementSelection(object.key, object.item.props.label)}
             selectedKeys={[]}
             onOpenChange={this.onOpenChange}
             style={{ width: 200, height:height}}

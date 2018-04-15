@@ -5,39 +5,45 @@ import * as PIXI from "pixi.js";
 export default class CircleTable extends Component {
 
   componentDidMount() {
-    const graphics = this.refs.graphics;
     const lineColor = this.props.grabbed ? 0x07ba89 : 0x000000
+    const radius = this.drawSeats(lineColor)
+    this.drawTable(lineColor, radius)
+  }
+
+  drawTable(lineColor, radius) {
+    const graphics = this.refs.graphics;
     graphics.beginFill(0xFFFFFF);
     graphics.lineStyle(2, lineColor, 1)
-    graphics.drawCircle(0, 0, this.props.radius);
+    graphics.drawCircle(0, 0, radius);
     graphics.endFill();
-    this.drawSeats(lineColor)
   }
 
   drawSeats(lineColor, newProps){
     const graphics = this.refs.graphics;
-    const seatRadius = newProps ? newProps.radius +15 : this.props.radius + 15
     const seats = newProps ? newProps.seatNumber : this.props.seatNumber
-
+    const seatCircleRadius = seats > 8 ? this.props.seatRadius/2 * seats : this.props.seatRadius * 2 * 2
     for(var i = 0; i < seats; i++){
-      const x = seatRadius * Math.cos(i * (2 * Math.PI) / seats)
-      const y = seatRadius * Math.sin(i * (2 * Math.PI) / seats)
-      graphics.beginFill(0xFFFFFF);
-      graphics.lineStyle(2, lineColor, 1)
-      graphics.drawCircle(x, y, 10);
-      graphics.endFill();
+      const x = seatCircleRadius * Math.cos(i * (2 * Math.PI) / seats)
+      const y = seatCircleRadius * Math.sin(i * (2 * Math.PI) / seats)
+      this.drawSeat(x, y, this.props.seatRadius, lineColor)
     }
+    return seatCircleRadius - this.props.seatRadius*2
   }
+
+     drawSeat(x, y, rad, lineColor){
+        const graphics = this.refs.graphics;
+        graphics.beginFill(0xFFFFFF);
+        graphics.lineStyle(2, lineColor, 1)
+        graphics.drawCircle(x, y, rad);
+        graphics.endFill();
+    }
 
   componentWillReceiveProps(nextProps){
     const graphics = this.refs.graphics;
     const lineColor = nextProps.grabbed ? 0x07ba89 : 0x000000
     graphics.clear()
-    graphics.beginFill(0xFFFFFF);
-    graphics.lineStyle(2, lineColor, 1)
-    graphics.drawCircle(0, 0, this.props.radius);
-    graphics.endFill();
-    this.drawSeats(lineColor, nextProps)
+    const radius = this.drawSeats(lineColor, nextProps)
+    this.drawTable(lineColor, radius)
   }
 
     render(){

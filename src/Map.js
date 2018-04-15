@@ -13,7 +13,9 @@ class Map extends Component {
         elements: [],
         elementClicked: false,
         selectedEleKey: -1,
-        eleOptions:{}
+        eleOptions:{},
+        selectedType:"",
+        elementType:""
     }
     this.handleElementSelection = this.handleElementSelection.bind(this)
     this.handleComponentSelect = this.handleComponentSelect.bind(this)
@@ -28,13 +30,13 @@ class Map extends Component {
     this.setState({elements: elements})
   }
 
-  handleComponentSelect(key, options){
-    this.setState({elementClicked:true, selectedEleKey:key, eleOptions:options})
+  handleComponentSelect(key, options, label, elementType){
+    this.setState({elementClicked:true, selectedEleKey:key, eleOptions:options, selectedType:label, elementType:elementType})
   }
 
-  handleElementSelection(key) {
+  handleElementSelection(key, label) {
     const {width, height} = this.props
-    const newElements = this.state.elements.concat([<Element key={this.elementCount} options={{}} eleKey={this.elementCount} elementType={key} x={width/2} y={height/2} onSelect={this.handleComponentSelect}/>])
+    const newElements = this.state.elements.concat([<Element label={label} key={this.elementCount} options={{}} eleKey={this.elementCount} elementType={key} x={width/2} y={height/2} onSelect={this.handleComponentSelect}/>])
     this.elementCount++
     this.setState({elements:newElements})
   }
@@ -56,7 +58,7 @@ class Map extends Component {
         </div>
         <div style={{float:"right", height: "100%", width:200, minHeight:940, verticalAlign:"top", backgroundColor:"#001529"}}>
           {this.state.elementClicked ? 
-            <ElementOptions optionChange={this.handleEleOptions} eleKey={this.state.selectedEleKey} eleOptions={this.state.eleOptions}/>
+            <ElementOptions optionChange={this.handleEleOptions} eleKey={this.state.selectedEleKey} eleOptions={this.state.eleOptions} name={this.state.selectedType} elementType={this.state.elementType}/>
             : null
           }
 

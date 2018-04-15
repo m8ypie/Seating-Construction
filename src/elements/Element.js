@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as PIXI from "pixi.js";
 import CircleTable from "./CircleTable"
-
+import SquareTable from "./SquareTable"
 //const interactionManager = new PIXI.interaction.InteractionManager()
 
 // http://pixijs.io/examples/#/basics/basic.js
+const seatRadius = 7.5
+
 export default class Element extends Component {
 
   constructor(props){
@@ -15,7 +17,8 @@ export default class Element extends Component {
       x: props.x,
       y: props.y,
       grabbed: false,
-      options:props.options
+      options:props.options,
+      elementType: props.elementType
     };
     this.handlePress = this.handlePress.bind(this)
     this.handleRelease = this.handleRelease.bind(this)
@@ -28,8 +31,7 @@ export default class Element extends Component {
   }
 
   handlePress(event){
-    //console.log(event.data)
-    this.props.onSelect(this.state.elementKey, this.state.options)
+    this.props.onSelect(this.state.elementKey, this.state.options, this.props.label, this.state.elementType)
     this.setState({ grabbed:true })
   }
 
@@ -45,9 +47,14 @@ export default class Element extends Component {
   }
 
   determineElement(props){
-      if(this.props.elementType === "table-round"){
-          return <CircleTable {...props}/>
-      }
+    switch(this.props.elementType){
+      case "table-round":
+        return <CircleTable {...props}/>
+      case "table-square":
+        return <SquareTable {...props}/>
+      default:
+        return null
+    }
   }
 
   render() {
@@ -66,6 +73,9 @@ export default class Element extends Component {
         touchmove:this.handleMove,
         grabbed:this.state.grabbed,
         radius: 30,
+        width: 60,
+        height: 60,
+        seatRadius:seatRadius,
         ...(this.state.options)
     } 
     return this.determineElement(elementProps)
