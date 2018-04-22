@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import elements from "../seatingValues/Elements"
 import { Menu, Icon } from 'antd';
+import { connect } from 'react-redux'
+import { addTable } from '../state/seatingActions'
 const SubMenu = Menu.SubMenu;
 
-export default class ElementSelection extends Component {
+class ElementSelection extends Component {
 
 
     constructor(props){
@@ -40,6 +42,19 @@ export default class ElementSelection extends Component {
         }
     }
 
+      handleElementSelection(key, label) {
+        const {width, height, tableMap, addTable} = this.props
+        const newTableId = tableMap.tables.length
+        const newTableValue = {
+            x: width/2,
+            y: height/2,
+            elementType:key,
+            label:label,
+            id: newTableId
+        }
+        addTable(newTableId,newTableValue)
+      }
+
     render() {
         const items = this.constructSeatingMenus()
         const {height, onElementSelection} = this.props
@@ -56,3 +71,9 @@ export default class ElementSelection extends Component {
         </Menu>
     }
 }
+
+export default connect((state, ownProps) => ({ 
+    tableMap: state.tableMap
+  }),
+  { addTable}
+)(ElementSelection);
