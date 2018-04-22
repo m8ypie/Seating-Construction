@@ -3,51 +3,60 @@ import PropTypes from "prop-types";
 import * as PIXI from "pixi.js";
 import CircleTable from "./CircleTable"
 import SquareTable from "./SquareTable"
+import { connect } from 'react-redux'
+import { updateTable, selectTable } from '../state/seatingActions'
 //const interactionManager = new PIXI.interaction.InteractionManager()
 
 // http://pixijs.io/examples/#/basics/basic.js
 const seatRadius = 7.5
 
-export default class Element extends Component {
+class SeatingElement extends Component {
 
   constructor(props){
     super(props)
-    this.state = {
-      elementKey: props.eleKey,
-      x: props.x,
-      y: props.y,
-      grabbed: false,
-      options:props.options,
-      elementType: props.elementType
-    };
+    const {table} = this.props
     this.handlePress = this.handlePress.bind(this)
     this.handleRelease = this.handleRelease.bind(this)
     this.handleMove = this.handleMove.bind(this)
     this.determineElement = this.determineElement.bind(this)
-  }
-
-  componentWillReceiveProps(nextProps){
-    this.setState({options:nextProps.options})
+    this.state = {
+      x: table.x,
+      y: table.y,
+      grabbed: false
+    }
   }
 
   handlePress(event){
-    this.props.onSelect(this.state.elementKey, this.state.options, this.props.label, this.state.elementType)
-    this.setState({ grabbed:true })
+   const table = this.props.table
+    table.grabbed = true
+    this.props.updateTable(table.id, table)
+    this.props.selectTable(table.id)
+    this.setState({grabbed:true})
   }
 
   handleRelease(){
-    this.setState({ grabbed:false })
+    const table = this.props.table
+    table.grabbed = false
+    table.x = this.state.x
+    table.y = this.state.y
+    this.props.updateTable(table.id, table)
+    this.setState({grabbed:false})
   }
 
   handleMove(event){
-    if(this.state.grabbed){
+   const table = this.props.table
+    if(table.grabbed){
       const {x, y} = event.data.global
-      this.setState({x:x, y:y})
+      this.setState({
+        x:x,
+        y:y
+      })
     }
   }
 
   determineElement(props){
-    switch(this.props.elementType){
+    const table = this.props.table
+    switch(table.elementType){
       case "table-round":
         return <CircleTable {...props}/>
       case "table-square":
@@ -58,10 +67,12 @@ export default class Element extends Component {
   }
 
   render() {
+    const table = this.props.table
+    const {x, y, grabbed} = this.state
     const elementProps = { 
-        x:this.state.x,
-        y:this.state.y,
-        rotation:this.state.rotation, 
+        x: x,
+        y: y,
+        rotation: table.rotation, 
         interactive:true,
         mousedown:this.handlePress,
         touchstart:this.handlePress,
@@ -71,13 +82,19 @@ export default class Element extends Component {
         touchendoutside:this.handleRelease,
         mousemove:this.handleMove,
         touchmove:this.handleMove,
-        grabbed:this.state.grabbed,
+        grabbed: grabbed,
         radius: 30,
         width: 60,
         height: 60,
         seatRadius:seatRadius,
-        ...(this.state.options)
+        ...(table.options)
     } 
     return this.determineElement(elementProps)
   }
 }
+
+export default connect((state, ownProps) => ({ 
+    table: state.tableMap.tables[ownProps.id]
+  }),
+  { updateTable, selectTable }
+)(SeatingElement);

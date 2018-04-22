@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import Map from "./Map"
+import TableMap from "./Map"
 import '../node_modules/antd/dist/antd.css'
 
 const height = 940;
@@ -17,7 +17,7 @@ class App extends Component {
     return (
       <div style={{ height:"100%"}}>
         {/*<h1>My Seating Map</h1>*/}
-        <Map width={width} height={height} options={options}/>
+        <TableMap width={width} height={height} options={options}/>
       </div>
     );
   }
