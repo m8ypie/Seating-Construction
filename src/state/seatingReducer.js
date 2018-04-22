@@ -2,12 +2,13 @@ import {
     TABLE_ADDED,
     TABLE_REMOVED,
     TABLE_UPDATED,
-    SELECTED_TABLE
+    SELECTED_TABLE,
+    CANVAS_RESIZE
 } from './seatingActions'
 
 const initialState = {
-    windowWidth:0,
-    windowHeight:0,
+    windowWidth: window.innerWidth-418,
+    windowHeight: window.innerHeight,
     tableIds:[],
     tables:{},
     selectedTable: false
@@ -36,6 +37,12 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedTable: action.id
+            }
+        case CANVAS_RESIZE:
+            return {
+                ...state,
+                windowHeight: action.height,
+                windowWidth: action.width-418
             }
         default:
             return state

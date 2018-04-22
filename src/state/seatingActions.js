@@ -3,6 +3,7 @@ export const TABLE_ADDED = 'TABLE_ADDED'
 export const TABLE_REMOVED = 'TABLE_REMOVED'
 export const TABLE_UPDATED = 'TABLE_UPDATED'
 export const SELECTED_TABLE = 'SELECTED_TABLE'
+export const CANVAS_RESIZE = 'CANVAS_RESIZE'
 
 export const addTable = (id, table) => {
     return { type: TABLE_ADDED, id:id, table:table }
@@ -18,4 +19,10 @@ export const updateTable = (id, newTableValue) => {
 
 export const selectTable = (id) => {
     return { type: SELECTED_TABLE, id:id }
+}
+
+export const resizeCanvas = () => {
+    const width = window.innerWidth
+    const height = window.innerHeight
+    return { type: CANVAS_RESIZE, width:width, height:height }
 }

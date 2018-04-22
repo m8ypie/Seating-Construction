@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Stage } from "react-pixi-fiber";
 import { connect } from 'react-redux'
-import { addTable, removeTable, updateTable } from './state/seatingActions'
+import { addTable, removeTable, updateTable, resizeCanvas } from './state/seatingActions'
 import Panel from "./controlPanel/Panel"
 import { Slider, Input, T } from 'antd';
 import SeatingElement from "./elements/Element"
@@ -51,6 +51,13 @@ class TableMap extends Component {
     addTable(newTableId,newTableValue)
   }
 
+  componentDidMount(){
+      window.addEventListener("resize", this.props.resizeCanvas);
+  }
+  componentWillUnmount(){
+      window.removeEventListener("resize", this.props.resizeCanvas);
+  }
+
   render() {
     const {width, height, options, tableMap} = this.props
     return <div style={{height:"100%"}}>
@@ -60,8 +67,8 @@ class TableMap extends Component {
         <div style={{display: "inline-block"}}>
             <Stage
             options={options}
-            height={height} 
-            width={width}
+            height={tableMap.windowHeight} 
+            width={tableMap.windowWidth}
             >
                 {tableMap.tableIds.map((id) => <SeatingElement key={id} id={id}/>)}
             </Stage>
@@ -77,5 +84,5 @@ class TableMap extends Component {
 export default connect((state, ownProps) => ({ 
     tableMap: state.tableMap
   }),
-  { updateTable, addTable, removeTable }
+  { updateTable, addTable, removeTable, resizeCanvas }
 )(TableMap);
