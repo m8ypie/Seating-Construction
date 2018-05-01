@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Graphics } from "react-pixi-fiber";
+import { Graphics, Container } from "react-pixi-fiber";
 import * as PIXI from "pixi.js";
+import Seat from "./Seat.js";
  
 export default class CircleTable extends Component {
 
@@ -19,24 +20,10 @@ export default class CircleTable extends Component {
   }
 
   drawSeats(lineColor, newProps){
-    const graphics = this.refs.graphics;
     const seats = newProps ? newProps.seatNumber : this.props.seatNumber
-    const seatCircleRadius = seats > 8 ? this.props.seatRadius/2 * seats : this.props.seatRadius * 2 * 2
-    for(var i = 0; i < seats; i++){
-      const x = seatCircleRadius * Math.cos(i * (2 * Math.PI) / seats)
-      const y = seatCircleRadius * Math.sin(i * (2 * Math.PI) / seats)
-      this.drawSeat(x, y, this.props.seatRadius, lineColor)
-    }
-    return seatCircleRadius - this.props.seatRadius*2
+    return this.refs.seat.drawSeatsCircle(lineColor, seats)
   }
 
-     drawSeat(x, y, rad, lineColor){
-        const graphics = this.refs.graphics;
-        graphics.beginFill(0xFFFFFF);
-        graphics.lineStyle(2, lineColor, 1)
-        graphics.drawCircle(x, y, rad);
-        graphics.endFill();
-    }
 
   componentWillReceiveProps(nextProps){
     const graphics = this.refs.graphics;
@@ -47,6 +34,10 @@ export default class CircleTable extends Component {
   }
 
     render(){
-        return <Graphics ref='graphics' {...this.props}/>
+      const {x, y, seatRadius, id, table} = this.props
+        return <Container>
+            <Seat x={x} y={y} seatRadius={seatRadius} tableId={id} table={table} ref='seat'/>
+            <Graphics ref='graphics' {...this.props}/>
+        </Container>
     }
 }

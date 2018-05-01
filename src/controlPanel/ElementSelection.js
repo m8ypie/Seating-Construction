@@ -50,7 +50,8 @@ class ElementSelection extends Component {
             y: height/2,
             elementType:key,
             label:label,
-            id: newTableId
+            id: newTableId,
+            seats:[]
         }
         addTable(newTableId,newTableValue)
       }

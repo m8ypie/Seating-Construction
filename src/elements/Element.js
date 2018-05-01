@@ -27,7 +27,7 @@ class SeatingElement extends Component {
   }
 
   handlePress(event){
-   const table = this.props.table
+    const table = this.props.table
     table.grabbed = true
     this.props.updateTable(table.id, table)
     this.props.selectTable(table.id)
@@ -72,6 +72,7 @@ class SeatingElement extends Component {
     const elementProps = { 
         x: x,
         y: y,
+        table:table,
         rotation: table.rotation, 
         interactive:true,
         mousedown:this.handlePress,

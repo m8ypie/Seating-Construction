@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Graphics } from "react-pixi-fiber";
+import { Graphics, Container } from "react-pixi-fiber";
+import Seat from "./Seat.js";
 import * as PIXI from "pixi.js";
  
 export default class SquareTable extends Component {
 
     componentDidMount() {
-        
         const lineColor = this.props.grabbed ? 0x07ba89 : 0x000000
         const {width, height} = this.drawSeats(lineColor)
         this.drawTable(width, height, lineColor)
@@ -28,42 +28,10 @@ export default class SquareTable extends Component {
     }
 
     drawSeats(lineColor, newProps){
-        const seatRadius = newProps ? newProps.seatRadius : this.props.seatRadius
         const seatsLong = newProps ? newProps.seatLong || 0 : this.props.seatLong || 0
         const seatsWide = newProps ? newProps.seatWide || 0 : this.props.seatWide || 0
-        const seatTop = Math.ceil(seatsLong/2)
-        const seatBottom = Math.floor(seatsLong/2)
-        const seatLeft = Math.ceil(seatsWide/2)
-        const seatRight = Math.floor(seatsWide/2)
 
-        const offset = seatRadius*2
-        const distanceFromTable = (seatRadius+5)
-        const width = seatTop*(2*1.5*seatRadius)+seatRadius
-        const height = seatLeft*(2*1.5*seatRadius)+seatRadius
-
-        for(var i = 0; i < seatTop; i++){
-            const x =  - width/2 + offset +(offset*1.5*i)
-            const y = -height/2 - distanceFromTable
-            this.drawSeat(x,y, seatRadius, lineColor);
-        }
-        for(var i = 0; i < seatBottom; i++){
-            const x =  - width/2 + offset +(offset*1.5*i)
-            const y = height/2 + distanceFromTable
-            this.drawSeat(x,y, seatRadius, lineColor);
-        }
-
-        for(var i = 0; i < seatLeft; i++){
-            const x =  -width/2 - distanceFromTable 
-            const y = -height/2 + offset +(offset*1.5*i)
-            this.drawSeat(x, y, seatRadius, lineColor);
-        }
-
-        for(var i = 0; i < seatRight; i++){
-            const x =  width/2 + distanceFromTable
-            const y = -height/2 + offset +(offset*1.5*i)
-            this.drawSeat(x, y, seatRadius, lineColor);
-        }
-        return {width:width, height:height}
+        return this.refs.seat.drawSeatsSquare(lineColor, seatsLong, seatsWide)
     }
 
     componentWillReceiveProps(nextProps){
@@ -75,6 +43,10 @@ export default class SquareTable extends Component {
     }
 
     render(){
-        return <Graphics ref='graphics' {...this.props}/>
+        const {x, y, seatRadius, id, table} = this.props
+        return <Container>
+            <Seat x={x} y={y} seatRadius={seatRadius} tableId={id} table={table} ref='seat'/> 
+            <Graphics ref='graphics' {...this.props}/>
+        </Container>
     }
 }

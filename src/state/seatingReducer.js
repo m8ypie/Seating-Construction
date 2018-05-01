@@ -3,7 +3,7 @@ import {
     TABLE_REMOVED,
     TABLE_UPDATED,
     SELECTED_TABLE,
-    CANVAS_RESIZE
+    CANVAS_RESIZE,
 } from './seatingActions'
 
 const initialState = {

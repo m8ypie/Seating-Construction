@@ -12,19 +12,49 @@ class ElementOptions extends Component {
         this.optionsChange = this.optionsChange.bind(this)
     }
 
+    calculateNewSeatState(field, value, table){
+        let seatAmount
+        if(table.elementType === "table-square"){
+            if(field === "seatWide"){
+                seatAmount = (table.options.seatLong || 0) + value
+            }else if(field === "seatLong"){
+                seatAmount = (table.options.seatWide || 0) + value
+            }
+        }else if(table.elementType === "table-round"){
+            seatAmount = value
+        }
+        const seats = []
+        for(var i = 0; i < seatAmount; i++){
+            if(table.seats[i]){
+                seats.push({
+                    ...table.seats[i]
+                })
+            }else{
+                seats.push({
+                    id: i,
+                    reserved: false,
+                    label:""
+                })
+            }
+        }
+        return seats
+    }
+
     optionsChange(key){
         const field = key
         return (value) => {
             const { updateTable, tableMap } = this.props
             const { selectedTable, tables } = tableMap
             const table = tables[selectedTable]
+            const newSeatState = this.calculateNewSeatState(field, value, table)
             const options = {
                 ...table.options,
                 [key]: value
             }
             const newTable = {
                 ...table,
-                options:options
+                options:options,
+                seats:newSeatState
             }
             this.props.updateTable(selectedTable, newTable)
         }

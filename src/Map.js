@@ -46,7 +46,8 @@ class TableMap extends Component {
       elementType:key,
       label:label,
       id: newTableId,
-      options:{}
+      options:{},
+      seats:[]
     }
     addTable(newTableId,newTableValue)
   }
