@@ -67,7 +67,7 @@ class SeatingElement extends Component {
   }
 
   render() {
-    const table = this.props.table
+    const {table, id, onSeatClicked} = this.props
     const {x, y, grabbed} = this.state
     const elementProps = { 
         x: x,
@@ -88,7 +88,9 @@ class SeatingElement extends Component {
         width: 60,
         height: 60,
         seatRadius:seatRadius,
-        ...(table.options)
+        seatClicked:onSeatClicked,
+        ...(table.options),
+        id: table.id
     } 
     return this.determineElement(elementProps)
   }

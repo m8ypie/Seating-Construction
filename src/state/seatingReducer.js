@@ -42,7 +42,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 windowHeight: action.height,
-                windowWidth: action.width - 400
+                windowWidth: action.width - 418
             }
         default:
             return state
