@@ -4,7 +4,6 @@ import { Stage, Container } from "react-pixi-fiber";
 import { connect } from 'react-redux'
 import { addTable, removeTable, updateTable, resizeCanvas } from './state/seatingActions'
 import Panel from "./controlPanel/Panel"
-import DraggableContainer from "./DraggableContainer";
 import { Slider, Input, T } from 'antd';
 import SeatingElement from "./elements/Element"
 import ElementOptions from "./controlPanel/ElementOptions"
