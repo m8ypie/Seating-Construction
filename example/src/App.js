@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import TableMap from "./Map"
+import { TableMap } from "seating-construction"
 import '../node_modules/antd/dist/antd.css'
 
 const height = "100%";

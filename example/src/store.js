@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import seatingReducer from './state/seatingReducer'
+import { SeatingReducer } from "seating-construction"
 const composeEnhancers = (typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
 const reducer = combineReducers({
-    tableMap: seatingReducer
+    tableMap: SeatingReducer
 })
 
 
