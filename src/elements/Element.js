@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js";
 import CircleTable from "./CircleTable"
 import SquareTable from "./SquareTable"
 import { connect } from 'react-redux'
-import { updateTable, selectTable } from '../state/seatingActions'
+import { updateTable, selectTable, constructionMode } from '../state/seatingActions'
 //const interactionManager = new PIXI.interaction.InteractionManager()
 
 // http://pixijs.io/examples/#/basics/basic.js
@@ -27,25 +27,29 @@ class SeatingElement extends Component {
   }
 
   handlePress(event){
-    const table = this.props.table
-    table.grabbed = true
-    this.props.updateTable(table.id, table)
-    this.props.selectTable(table.id)
-    this.setState({grabbed:true})
+    const{ constructionMode, table } = this.props
+    if(constructionMode){
+      table.grabbed = true
+      this.props.updateTable(table.id, table)
+      this.props.selectTable(table.id)
+      this.setState({grabbed:true})
+    }
   }
 
   handleRelease(){
-    const table = this.props.table
-    table.grabbed = false
-    table.x = this.state.x
-    table.y = this.state.y
-    this.props.updateTable(table.id, table)
-    this.setState({grabbed:false})
+    const{ constructionMode, table } = this.props
+    if(constructionMode){
+      table.grabbed = false
+      table.x = this.state.x
+      table.y = this.state.y
+      this.props.updateTable(table.id, table)
+      this.setState({grabbed:false})
+    }
   }
 
   handleMove(event){
-   const table = this.props.table
-    if(table.grabbed){
+    const{ constructionMode, table } = this.props
+    if(table.grabbed && constructionMode){
       const {x, y} = event.data.global
       this.setState({
         x:x,
@@ -97,7 +101,8 @@ class SeatingElement extends Component {
 }
 
 export default connect((state, ownProps) => ({ 
-    table: state.tableMap.tables[ownProps.id]
+    table: state.tableMap.tables[ownProps.id],
+    constructionMode: state.tableMap.constructionMode
   }),
   { updateTable, selectTable }
 )(SeatingElement);

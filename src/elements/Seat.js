@@ -3,7 +3,7 @@ import { Graphics } from "react-pixi-fiber";
 import { connect } from 'react-redux'
 import * as PIXI from "pixi.js";
 
-export default class Seat extends Component {
+class Seat extends Component {
 
   constructor(props) {
     super(props)
@@ -11,8 +11,10 @@ export default class Seat extends Component {
   }
 
   handlePress(event) {
-    const {seatId, tableId, onClick} = this.props
-    onClick(tableId, seatId)
+    const {seatId, tableId, onClick, constructionMode, seat} = this.props
+    if(!constructionMode){
+      onClick(tableId, seatId, seat)
+    }
   }
 
   componentDidMount() {
@@ -45,3 +47,10 @@ export default class Seat extends Component {
     />
   }
 }
+
+export default connect((state, ownProps) => ({ 
+  constructionMode: state.tableMap.constructionMode,
+  seat: state.tableMap.tables[ownProps.tableId][ownProps.seatId]
+}),
+{}
+)(Seat);

@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /example/node_modules
-
+/example/server/node_modules
 # testing
 /coverage
 

@@ -1,4 +1,10 @@
 import TableMap from './Map'
 import SeatingReducer from './state/seatingReducer'
+import { updateSeat, loadSeatingMap } from './state/seatingActions'
 
-export {TableMap, SeatingReducer}
+const actions = {
+  updateSeat: updateSeat,
+  loadSeatingMap: loadSeatingMap
+}
+
+export {TableMap, SeatingReducer, actions}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Stage, Container } from "react-pixi-fiber";
 import { connect } from 'react-redux'
-import { addTable, removeTable, updateTable, resizeCanvas } from './state/seatingActions'
+import { addTable, removeTable, updateTable, resizeCanvas, setConstructionMode } from './state/seatingActions'
 import Panel from "./controlPanel/Panel"
 import { Slider, Input, T } from 'antd';
 import SeatingElement from "./elements/Element"
@@ -23,8 +23,11 @@ class TableMap extends Component {
         this.handleElementSelection = this.handleElementSelection.bind(this)
         this.handleComponentSelect = this.handleComponentSelect.bind(this)
         this.handleEleOptions = this.handleEleOptions.bind(this)
+        this.determineCanvasWidthHeight = this.determineCanvasWidthHeight.bind(this)
         this.elementCount = 0
-        const { canvasHeight, canvasWidth } = this.determineCanvasWidthHeight(props.width, props.height)
+        const { constructionMode, setConstructionMode } = props
+        setConstructionMode(constructionMode)
+        const { canvasHeight, canvasWidth } = this.determineCanvasWidthHeight(props.width, props.height, constructionMode)
         this.state = {
             canvasHeight: canvasHeight,
             canvasWidth: canvasWidth
@@ -66,17 +69,29 @@ class TableMap extends Component {
         window.removeEventListener("resize", this.props.resizeCanvas);
     }
 
-    determineCanvasWidthHeight(width, height){
+    componentWillReceiveProps(props){
+        const {width, height, constructionMode} = props
+        const { canvasHeight, canvasWidth } = this.determineCanvasWidthHeight(width, height, constructionMode)
+        this.setState({
+            canvasHeight: canvasHeight,
+            canvasWidth: canvasWidth
+        })
+    }
+
+    determineCanvasWidthHeight(width, height, constructionMode){
         const dimensions = {}
         if(typeof width === "number"){
-            dimensions.canvasWidth = width - 400
+            dimensions.canvasWidth = width
         }else{
             if(width.endsWith("px")){
-                dimensions.canvasWidth = parseInt(width.replace("px", "")) - 417
+                dimensions.canvasWidth = parseInt(width.replace("px", ""))
             }else if(width.endsWith("%")){
                 const percentage = parseInt(width.replace("%", ""))/100
-                dimensions.canvasWidth = (window.innerWidth * percentage) - 417
+                dimensions.canvasWidth = (window.innerWidth * percentage)
             }
+        }
+        if(constructionMode){
+            dimensions.canvasWidth = dimensions.canvasWidth - 417
         }
 
         if(typeof height === "number"){
@@ -93,31 +108,43 @@ class TableMap extends Component {
     }
 
   render() {
-    const {width, height, options, tableMap, onSeatClicked} = this.props
+    const {width, height, options, tableMap, onSeatClicked, constructionMode} = this.props
     const {canvasHeight, canvasWidth} = this.state
-    return <div style={{height:height, width:width, background:"#001529"}}>
-        <div style={{float:"left", height: height, verticalAlign:"top"}}>
-            <Panel height={height} onElementSelection={this.handleElementSelection}/>
-        </div>
-        <div style={{display: "inline-block"}}>
-                <Stage
-                    options={options}
-                    height={canvasHeight} 
-                    width={canvasWidth}
-                >   
-                    {tableMap.tableIds.map((id) => <SeatingElement onSeatClicked={onSeatClicked} key={id} id={id}/>)}
-                </Stage>
+    if(constructionMode){
+        return <div style={{height:height, width:width, background:"#001529"}}>
+            <div style={{float:"left", height: height, verticalAlign:"top"}}>
+                <Panel height={height} onElementSelection={this.handleElementSelection}/>
+            </div>
+            <div style={{display: "inline-block"}}>
+                    <Stage
+                        options={options}
+                        height={canvasHeight} 
+                        width={canvasWidth}
+                    >   
+                        {tableMap.tableIds.map((id) => <SeatingElement onSeatClicked={onSeatClicked} key={id} id={id}/>)}
+                    </Stage>
 
+            </div>
+            <div style={{float:"right", height: height, width:200, verticalAlign:"top", backgroundColor:"#001529"}}>
+                <ElementOptions/>
+            </div>
         </div>
-        <div style={{float:"right", height: height, width:200, verticalAlign:"top", backgroundColor:"#001529"}}>
-            <ElementOptions/>
+    }else{
+        return <div style={{display: "inline-block"}}>
+            <Stage
+                options={options}
+                height={canvasHeight} 
+                width={canvasWidth}
+            >   
+                {tableMap.tableIds.map((id) => <SeatingElement onSeatClicked={onSeatClicked} key={id} id={id}/>)}
+            </Stage>
         </div>
-      </div>
+    }
   }
 }
 
 export default connect((state, ownProps) => ({ 
     tableMap: state.tableMap
   }),
-  { updateTable, addTable, removeTable, resizeCanvas }
+  { updateTable, addTable, removeTable, resizeCanvas, setConstructionMode }
 )(TableMap);
